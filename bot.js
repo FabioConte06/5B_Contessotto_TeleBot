@@ -22,13 +22,13 @@ const searchEbayProducts = (query, offset = 0) => {
         fetch(ebayApiUrl, { 
             method: 'GET', headers: headers })
             .then(response => {
-                console.log(`Response status: ${response.status}`);
+                console.log(`Status: ${response.status}`);
                 return response.json();
             })
             .then(data => {
-                console.log('Response data:', JSON.stringify(data));
+                console.log('Data:', JSON.stringify(data));
                 if (!data.itemSummaries) {
-                    console.error('No itemSummaries found in the response.');
+                    console.error('Nessun item trovato.');
                     resolve([]);
                 } else {
                     resolve(data.itemSummaries);
@@ -84,18 +84,18 @@ Link: ${product.itemWebUrl}
                     `;
                     await bot.sendMessage(chatId, message);
                 }
-                bot.sendMessage(chatId, "Puoi aggiungere un prodotto ai preferiti usando il comando /addfavourite [numero prodotto]. Usa /next per vedere i risultati successivi o /back per tornare indietro.");
             } else {
                 bot.sendMessage(chatId, "Nessun prodotto trovato per questa ricerca.");
             }
         } catch (error) {
             bot.sendMessage(chatId, "Si è verificato un errore durante la ricerca.");
         }
+        bot.sendMessage(chatId, "Puoi aggiungere un prodotto ai preferiti usando il comando /addfavourite [numero prodotto]. Usa /next per vedere i risultati successivi o /back per tornare indietro.");
     }
 
     else if (text === "/next") {
         if (!searchResults[chatId] || !searchResults[chatId].query) {
-            bot.sendMessage(chatId, "Non hai effettuato alcuna ricerca. Usa il comando /search [keyword] per iniziare.");
+            bot.sendMessage(chatId, "Non hai effettuato alcuna ricerca. Usa il comando /search [prodotto] per iniziare.");
             return;
         }
     
@@ -109,13 +109,12 @@ Link: ${product.itemWebUrl}
                 for (let index = 0; index < products.length; index++) {
                     const product = products[index];
                     const message = `
-    #${index + 1 + newOffset} // Corretto per mostrare il numero giusto
+    #${index + 1 + newOffset}
     Titolo: ${product.title}
     Prezzo: ${product.price.value} ${product.price.currency}
     Link: ${product.itemWebUrl}
                     `;
                     await bot.sendMessage(chatId, message);
-                    bot.sendMessage(chatId, "Puoi aggiungere un prodotto ai preferiti usando il comando /addfavourite [numero prodotto]. Usa /next per vedere i risultati successivi o /back per tornare indietro.");
                 }
                 searchOffsets[chatId] = newOffset;
             } else {
@@ -124,11 +123,12 @@ Link: ${product.itemWebUrl}
         } catch (error) {
             bot.sendMessage(chatId, "Si è verificato un errore durante il caricamento dei risultati successivi.");
         }
+        bot.sendMessage(chatId, "Puoi aggiungere un prodotto ai preferiti usando il comando /addfavourite [numero prodotto]. Usa /next per vedere i risultati successivi o /back per tornare indietro.");
     }
 
     else if (text === "/back") {
         if (!searchResults[chatId] || !searchResults[chatId].query) {
-            bot.sendMessage(chatId, "Non hai effettuato alcuna ricerca. Usa il comando /search [keyword] per iniziare.");
+            bot.sendMessage(chatId, "Non hai effettuato alcuna ricerca. Usa il comando /search [prodotto] per iniziare.");
             return;
         }
     
@@ -141,19 +141,18 @@ Link: ${product.itemWebUrl}
         }
     
         try {
-            const newOffset = Math.max(0, offset - 5);
+            const newOffset = offset - 5;
             const products = await searchEbayProducts(query, newOffset);
             if (products.length > 0) {
                 for (let index = 0; index < products.length; index++) {
                     const product = products[index];
                     const message = `
-    #${index + 1 + newOffset} // Corretto per mostrare il numero giusto
+    #${index + 1 + newOffset}
     Titolo: ${product.title}
     Prezzo: ${product.price.value} ${product.price.currency}
     Link: ${product.itemWebUrl}
                     `;
                     await bot.sendMessage(chatId, message);
-                    bot.sendMessage(chatId, "Puoi aggiungere un prodotto ai preferiti usando il comando /addfavourite [numero prodotto]. Usa /next per vedere i risultati successivi o /back per tornare indietro.");
                 }
                 searchOffsets[chatId] = newOffset;
             } else {
@@ -162,6 +161,7 @@ Link: ${product.itemWebUrl}
         } catch (error) {
             bot.sendMessage(chatId, "Si è verificato un errore durante il caricamento dei risultati precedenti.");
         }
+        bot.sendMessage(chatId, "Puoi aggiungere un prodotto ai preferiti usando il comando /addfavourite [numero prodotto]. Usa /next per vedere i risultati successivi o /back per tornare indietro.");
     }
 
     else if (text === "/favourites") {
