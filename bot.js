@@ -165,7 +165,7 @@ Link: ${product.itemWebUrl}
     }
 
     else if (text === "/favourites") {
-        const userFavorites = favorites[chatId] || [];
+        const userFavorites = favorites[chatId];
         if (userFavorites.length > 0) {
             userFavorites.forEach((item, index) => {
                 bot.sendMessage(chatId, `
@@ -182,7 +182,7 @@ Link: ${item.itemWebUrl}
 
     else if (text.startsWith("/addfavourite ")) {
         const productIndex = parseInt(text.replace("/addfavourite ", "").trim()) - 1;
-        const userResults = searchResults[chatId]?.products || [];
+        const userResults = searchResults[chatId].products;
         if (userResults[productIndex]) {
             const product = userResults[productIndex];
             if (!favorites[chatId]) {
