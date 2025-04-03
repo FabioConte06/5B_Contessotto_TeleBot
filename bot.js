@@ -67,8 +67,8 @@ Ecco i comandi disponibili:
     }
 
     // Comando /search
-    else if (text.startsWith("/search ")) {
-        const query = text.replace("/search ", "").trim();
+    else if (text.startsWith("/search")) {
+        const query = text.replace("/search", "").trim();
         try {
             const products = await searchEbayProducts(query);
             if (products.length > 0) {
@@ -93,6 +93,7 @@ Link: ${product.itemWebUrl}
         bot.sendMessage(chatId, "Puoi aggiungere un prodotto ai preferiti usando il comando /addfavourite [numero prodotto]. Usa /next per vedere i risultati successivi o /back per tornare indietro.");
     }
 
+    // Comando /next
     else if (text === "/next") {
         if (!searchResults[chatId] || !searchResults[chatId].query) {
             bot.sendMessage(chatId, "Non hai effettuato alcuna ricerca. Usa il comando /search [prodotto] per iniziare.");
@@ -126,6 +127,7 @@ Link: ${product.itemWebUrl}
         bot.sendMessage(chatId, "Puoi aggiungere un prodotto ai preferiti usando il comando /addfavourite [numero prodotto]. Usa /next per vedere i risultati successivi o /back per tornare indietro.");
     }
 
+    // Comando /back
     else if (text === "/back") {
         if (!searchResults[chatId] || !searchResults[chatId].query) {
             bot.sendMessage(chatId, "Non hai effettuato alcuna ricerca. Usa il comando /search [prodotto] per iniziare.");
@@ -164,6 +166,7 @@ Link: ${product.itemWebUrl}
         bot.sendMessage(chatId, "Puoi aggiungere un prodotto ai preferiti usando il comando /addfavourite [numero prodotto]. Usa /next per vedere i risultati successivi o /back per tornare indietro.");
     }
 
+    // Comando /favourites
     else if (text === "/favourites") {
         const userFavorites = favorites[chatId];
         if (userFavorites.length > 0) {
@@ -180,8 +183,9 @@ Link: ${item.itemWebUrl}
         }
     }
 
-    else if (text.startsWith("/addfavourite ")) {
-        const productIndex = parseInt(text.replace("/addfavourite ", "").trim()) - 1;
+    // Comando /addfavourite
+    else if (text.startsWith("/addfavourite")) {
+        const productIndex = parseInt(text.replace("/addfavourite", "").trim()) - 1;
         const userResults = searchResults[chatId].products;
         if (userResults[productIndex]) {
             const product = userResults[productIndex];
@@ -195,8 +199,9 @@ Link: ${item.itemWebUrl}
         }
     }
 
-    else if (text.startsWith("/remove ")) {
-        const productIndex = parseInt(text.replace("/remove ", "").trim()) - 1;
+    // Comando /remove
+    else if (text.startsWith("/remove")) {
+        const productIndex = parseInt(text.replace("/remove", "").trim()) - 1;
         if (favorites[chatId]) {
             const removedProduct = favorites[chatId].splice(productIndex, 1);
             if (removedProduct.length > 0) {
