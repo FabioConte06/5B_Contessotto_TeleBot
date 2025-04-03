@@ -14,7 +14,7 @@ const searchEbayProducts = (query, offset = 0) => {
     return new Promise((resolve, reject) => {
         const ebayApiUrl = `https://api.ebay.com/buy/browse/v1/item_summary/search?q=${encodeURIComponent(query)}&limit=5&offset=${offset}&currency=EUR`;
         const headers = {
-            'Authorization': `Bearer ${conf.ebay.access_token}`,
+            'Authorization': `Bearer ${conf.api.userToken}`,
             'Content-Type': 'application/json',
             'X-EBAY-C-MARKETPLACE-ID': 'EBAY_IT'
         };
@@ -48,7 +48,7 @@ bot.on("message", async (msg) => {
 
     // Comando /start
     if (text === "/start") {
-        bot.sendMessage(chatId, "Benvenuto! Inviami una categoria di prodotti o un comando per iniziare.");
+        bot.sendMessage(chatId, "Benvenuto! Utilizza il comando /help per visualizzare i comandi ed iniziare.");
     }
 
     // Comando /help
@@ -56,7 +56,7 @@ bot.on("message", async (msg) => {
         const helpMessage = `
 Ecco i comandi disponibili:
 /start - Inizia a usare il bot
-/search [keyword] - Cerca prodotti su eBay
+/search [prodotto] - Cerca prodotti su eBay
 /next - Mostra i risultati successivi della ricerca corrente
 /back - Mostra i risultati precedenti della ricerca corrente
 /addfavourite [numero prodotto] - Aggiungi un prodotto ai preferiti
@@ -83,9 +83,6 @@ Prezzo: ${product.price.value} ${product.price.currency}
 Link: ${product.itemWebUrl}
                     `;
                     await bot.sendMessage(chatId, message);
-                    if (product.image) {
-                        await bot.sendPhoto(chatId, product.image.imageUrl);
-                    }
                 }
                 bot.sendMessage(chatId, "Puoi aggiungere un prodotto ai preferiti usando il comando /addfavourite [numero prodotto]. Usa /next per vedere i risultati successivi o /back per tornare indietro.");
             } else {
@@ -118,9 +115,7 @@ Link: ${product.itemWebUrl}
     Link: ${product.itemWebUrl}
                     `;
                     await bot.sendMessage(chatId, message);
-                    if (product.image) {
-                        await bot.sendPhoto(chatId, product.image.imageUrl);
-                    }
+                    bot.sendMessage(chatId, "Puoi aggiungere un prodotto ai preferiti usando il comando /addfavourite [numero prodotto]. Usa /next per vedere i risultati successivi o /back per tornare indietro.");
                 }
                 searchOffsets[chatId] = newOffset;
             } else {
@@ -158,9 +153,7 @@ Link: ${product.itemWebUrl}
     Link: ${product.itemWebUrl}
                     `;
                     await bot.sendMessage(chatId, message);
-                    if (product.image) {
-                        await bot.sendPhoto(chatId, product.image.imageUrl);
-                    }
+                    bot.sendMessage(chatId, "Puoi aggiungere un prodotto ai preferiti usando il comando /addfavourite [numero prodotto]. Usa /next per vedere i risultati successivi o /back per tornare indietro.");
                 }
                 searchOffsets[chatId] = newOffset;
             } else {
@@ -187,8 +180,8 @@ Link: ${item.itemWebUrl}
         }
     }
 
-    else if (text.startsWith("/addfavorite ")) {
-        const productIndex = parseInt(text.replace("/addfavorite ", "").trim()) - 1;
+    else if (text.startsWith("/addfavourite ")) {
+        const productIndex = parseInt(text.replace("/addfavourite ", "").trim()) - 1;
         const userResults = searchResults[chatId]?.products || [];
         if (userResults[productIndex]) {
             const product = userResults[productIndex];
@@ -220,7 +213,6 @@ Link: ${item.itemWebUrl}
         bot.sendMessage(chatId, "Comando non riconosciuto. Usa /help per vedere i comandi disponibili.");
     }
 })
-
 
 
 // Avvio del bot
