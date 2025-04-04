@@ -14,7 +14,7 @@ const searchEbayProducts = (query, offset = 0) => {
     return new Promise((resolve, reject) => {
         const ebayApiUrl = `https://api.ebay.com/buy/browse/v1/item_summary/search?q=${encodeURIComponent(query)}&limit=5&offset=${offset}&currency=EUR`;
         const headers = {
-            'Authorization': `Bearer ${conf.api.userToken}`,
+            'Authorization': `Bearer ${conf.ebay.access_token}`,
             'Content-Type': 'application/json',
             'X-EBAY-C-MARKETPLACE-ID': 'EBAY_IT'
         };
