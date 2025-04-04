@@ -143,8 +143,8 @@ Link: ${product.itemWebUrl}
         }
     
         try {
-            const newOffset = offset - 5;
-            const products = await searchEbayProducts(query, newOffset);
+            const newOffset = Math.max(0, offset - 5);
+            const products = searchResults[chatId].products.slice(newOffset, newOffset + 5);
             if (products.length > 0) {
                 for (let index = 0; index < products.length; index++) {
                     const product = products[index];
